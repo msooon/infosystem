@@ -1,0 +1,32 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE category_alias (id integer PRIMARY KEY, category_id integer, name string, Unique (name));
+CREATE TABLE config (zones integer,open_browser bool,open_filemanager bool);
+CREATE TABLE disks_bez (id integer PRIMARY KEY, name string, bez string, Unique (name));
+CREATE TABLE item_ref(id integer PRIMARY KEY,item1_id integer, item1_type_id integer, item2_id integer, item2_type_id integer, unique (item1_id, item1_type_id, item2_id, item2_type_id));
+CREATE TABLE links(id integer PRIMARY KEY,name text,mediatype text,source text,mirror text,dateAdded datetime,zone integer default 3, pid integer, fid integer, votes integer default 0 not null, rating integer default 0 not null, unique (source));
+CREATE TABLE zone_bez (id integer PRIMARY KEY, zone integer, bez string, Unique (zone));
+CREATE TABLE zones (id integer PRIMARY KEY, zones integer, zone integer, Unique (zones,zone));
+CREATE TABLE category_item(id integer PRIMARY KEY,category_id integer not null,item_id integer not null,item_type_id integer not null,UNIQUE (category_id,item_id,item_type_id));
+CREATE TABLE history(item_id integer, item_type_id integer, search_term text, categories text, ex_categories text, zones integer, timestamp datetime, command text, parameters text, output text);
+CREATE TABLE category(id integer PRIMARY KEY,name text,parent integer, zone integer,UNIQUE (name));
+CREATE TABLE files(id integer PRIMARY KEY,name text,mediatype text,disksource text,inode integer,bdisksource text,binode integer,source text,zone integer default 3, votes integer default 0 not null, rating integer default 0 not null, UNIQUE (disksource,inode));
+CREATE VIEW category_link as select category_id, item_id from category_item where item_type_id=2;
+CREATE VIEW category_info as select category_id, item_id from category_item where item_type_id=1;
+CREATE VIEW v_infos as select * from infos;
+CREATE VIEW category_file as select category_id, item_id from category_item where item_type_id=3;
+CREATE VIEW v_links as select *,dateAdded as date from links;
+CREATE VIEW v_files as select *,Null as dateAdded,Null as date from files;
+
+-- add system category
+INSERT INTO "category" VALUES(1,'use_clipboard',0,0);
+INSERT INTO "category" VALUES(2,'check',0,3);
+INSERT INTO "category" VALUES(3,'weekly',7,3);
+INSERT INTO "category" VALUES(4,'monthly',7,3);
+INSERT INTO "category" VALUES(5,'todo',0,3);
+INSERT INTO "category" VALUES(6,'biweekly',7,3);
+INSERT INTO "category" VALUES(7,'periodical',0,3);
+INSERT INTO "category" VALUES(8,'blacklist',0,3);
+INSERT INTO "category" VALUES(9,'yearly',0,3);
+INSERT INTO "category" VALUES(10,'done',0,7);
+COMMIT;
