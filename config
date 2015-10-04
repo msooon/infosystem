@@ -1,4 +1,4 @@
-zones=3 #1 private 2 buisness 3 both 4:protected (eg. passwords) 8:public www 
+zones=1 #1 private 2 buisness 3 both 4:protected (eg. passwords) 8:public www 
 database=/media/Daten/memento_infosystem.db
 backup=/media/Daten/backup
 #pub_db=/media/Daten/memento_infosystem_anon.db

@@ -21,7 +21,9 @@ echo ""
 
 #ls -ahl $database /mnt/ftp/infosystem/infosystem
 
-sqlite3 $database < leave_mobile_mode.sql 2> /dev/null
+if [ -e leave_mobile_mode.sql ] ; then 
+	sqlite3 $database < leave_mobile_mode.sql 2> /dev/null
+fi
 
 cp $database $backup/infosystem_`date +%d`.db
 
