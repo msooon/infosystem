@@ -1,7 +1,6 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE category_alias (id integer PRIMARY KEY, category_id integer, name string, Unique (name));
-CREATE TABLE config (zones integer,open_browser bool,open_filemanager bool);
 CREATE TABLE disks_bez (id integer PRIMARY KEY, name string, bez string, Unique (name));
 CREATE TABLE item_ref(id integer PRIMARY KEY,item1_id integer, item1_type_id integer, item2_id integer, item2_type_id integer, unique (item1_id, item1_type_id, item2_id, item2_type_id));
 CREATE TABLE links(id integer PRIMARY KEY,name text,mediatype text,source text,mirror text,dateAdded datetime,zone integer default 3, pid integer, fid integer, votes integer default 0 not null, rating integer default 0 not null, unique (source));
