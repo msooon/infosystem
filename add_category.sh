@@ -14,7 +14,7 @@ EXIT_BUG=10
 
 source ${0%/*}/config
 
-# Variablen für Optionsschalter hier mit Default-Werten vorbelegen
+# Variablen fÃ¼r Optionsschalter hier mit Default-Werten vorbelegen
 #VERBOSE=n
 OPTFILE=""
 
@@ -66,9 +66,10 @@ if [[ $VERBOSE = y ]] ; then
 fi
 sqlite3 "$database" "$dbquery"
 
+# 2015-10-11 msoon: if category exists but in wrong hirarchy or zone - change it
+#falls Kategorie schon existierte aber Einordnung geÃ¤ndert werden soll
 
-#falls Kategorie schon existierte aber Einordnung geändert werden soll
-
+#TODO Error handling
 parent_id=`sqlite3 $database "select id from category where name=\"$parent\" or id in (select category.id from category, category_alias where category.id = category_alias.category_id and category_alias.name=\"$parent\");"`
 
 dbquery="update category set parent=\"$parent_id\",zone=$zones where name=\"$category\" or id in (select category.id from category, category_alias where category.id = category_alias.category_id and category_alias.name=\"$category\");"
