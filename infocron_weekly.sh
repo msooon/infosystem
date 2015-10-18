@@ -44,8 +44,11 @@ do
 done < $ramdisk/sites_to_check
 
 # delete old done tags
-echo "delete old done tags"
-echo "delete from category_item where item_type_id=1 and category_id=10 and item_id in (select id from infos where date()>date(date,'+4 month') );"
+if [[ $VERBOSE = y ]] ; then
+	echo "delete old done tags"
+	echo "delete from category_item where item_type_id=1 and category_id=10 and item_id in (select id from infos where date()>date(date,'+4 month') );"
+fi
+
 sqlite3 $database "delete from category_item where item_type_id=1 and category_id=10 and item_id in (select id from infos where date()>date(date,'+4 month') );"
 
 # biweekly and monthly
