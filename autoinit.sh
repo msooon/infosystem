@@ -151,7 +151,7 @@ echo ""
 #msearch $msearch_opt_args -i  -d"='`date +%Y-%m-%d`' or (Date(DateAdded)<='`date +%Y-%m-%d`' and Date(expiration)>='`date +%Y-%m-%d`')"
 #die doppelte Abfrage mit DateAdded wird benötigt da Treffer mit expiration is null sonst rausfallen
 #2013-02-06 msoon: durch 2 Abfragen ersetzt da wegen 'OR' ansonsten restliche Bedingungen wie zone ignoriert werden
-msearch $msearch_opt_args -i  -d"='`date +%Y-%m-%d`'" #-w "Date(expiration) is null"
+msearch $msearch_opt_args -i  -d"='`date +%Y-%m-%d`'" -x done  #-w "Date(expiration) is null"
 #msearch $msearch_opt_args -i -d"<='`date +%Y-%m-%d`'" -w "Date(expiration)>='`date +%Y-%m-%d`'" -x "weekly','biweekly','monthly"
 msearch $msearch_opt_args -i  -w "Date(date)<='`date +%Y-%m-%d`' and Date(expiration)>='`date +%Y-%m-%d`'" -x "done','weekly','biweekly','monthly"
 
