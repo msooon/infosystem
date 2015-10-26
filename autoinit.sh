@@ -143,7 +143,7 @@ msearch $msearch_opt_args -i -l -d"='`date -d "Yesterday" +%Y-%m-%d`'" -x "done'
 
 echo "---------------------------------------------------------------------------"
 echo ""
-echo -e "\E[93m Einträge für heute: "; tput sgr0
+echo -e "\E[93m todays entries: "; tput sgr0
 echo "---------------------------------------------------------------------------"
 echo ""
 #msearch $msearch_opt_args -i  -d"='`date +%Y-%m-%d`'" -x "done','done1w','done2w','done1m"
@@ -157,7 +157,7 @@ msearch $msearch_opt_args -i  -w "Date(date)<='`date +%Y-%m-%d`' and Date(expira
 
 echo "---------------------------------------------------------------------------"
 echo ""
-echo -e "\E[93m Termine morgen: "; tput sgr0
+echo -e "\E[93m tomorrow's entries: "; tput sgr0
 echo "---------------------------------------------------------------------------"
 echo ""
 msearch $msearch_opt_args -i  -d"='`date -d "1 day" +%Y-%m-%d`'"
@@ -165,7 +165,7 @@ msearch $msearch_opt_args -i  -d"='`date -d "1 day" +%Y-%m-%d`'"
 
 echo "---------------------------------------------------------------------------"
 echo ""
-echo -e "\E[93m Termine in 2 Tagen: "; tput sgr0
+echo -e "\E[93m entries in 2 days: "; tput sgr0
 echo "---------------------------------------------------------------------------"
 echo ""
 msearch $msearch_opt_args -i  -d"='`date -d "2 days" +%Y-%m-%d`'"
@@ -173,7 +173,7 @@ msearch $msearch_opt_args -i  -d"='`date -d "2 days" +%Y-%m-%d`'"
 
 echo "---------------------------------------------------------------------------"
 echo ""
-echo -e "\E[93m weitere Termine: "; tput sgr0
+echo -e "\E[93m further entries: "; tput sgr0
 echo "---------------------------------------------------------------------------"
 echo ""
 msearch $msearch_opt_args -i  -o2 -d">'`date -d "2 days" +%Y-%m-%d`'" -x "weekly','biweekly','monthly"
@@ -194,7 +194,7 @@ echo ""
 echo -e "\E[35m LastModified Infos: "; tput sgr0
 echo "---------------------------------------------------------------------------"
 echo ""
-sqlite3 $database -header "select infos.id,LastModified, infos.name
+sqlite3 $database -header "select infos.id,LastModified, infos.name, infos.zone
 	--, substr(text,1,70) 
 	from infos
 	where 1=1
