@@ -1,6 +1,8 @@
 #!/bin/bash
 
+#Notice: if you change bin_path you also have to change same static path in msearch.sh
 bin_path=/media/daten/bin
+mkdir $bin_path || exit
 cd /usr/local/bin || exit
 
  ln -s $bin_path/config config
