@@ -8,7 +8,7 @@ http://msoon.kochab.uberspace.de/infosystem_intro.webm (better download)
 
 we need the following tools:
 
-git, bc, wget, sqlite3, sed, awk, curl
+git, bc, wget, sqlite3, sed, awk, curl, surfraw (only for option -g)
 
 
 and some editor like vim or nano defined in $EDITOR
