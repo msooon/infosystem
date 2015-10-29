@@ -1,8 +1,8 @@
 #!/bin/bash
 
 source ${0%/*}/config  #for definition of $base_path
-
-#Notice: if you change bin_path you also have to change static path in msearch.sh
+#Notice: if you change bin_path you also have to change static path in msearch.sh or use following symlink
+#ln -s $base_path /media/daten
 bin_path=$infosystem
 mkdir $bin_path || exit
 mkdir -p $infosystem/cache
@@ -12,7 +12,6 @@ cd /usr/local/bin || exit
 # choose a symlink to work easier with categories
 #ln -s /mnt/ramdisk/category /category
 #ln -s /tmp/category /category
-
  ln -s $bin_path/config config
 
  ln -s $bin_path/add_category_alias.sh add_category_alias
@@ -28,6 +27,7 @@ cd /usr/local/bin || exit
  ln -s $bin_path/add_moz_bookmarks.sh add_moz_bookmarks
  ln -s $bin_path/add_moz_downloads.sh add_moz_downloads
  ln -s $bin_path/autoinit.sh autoinit
+ ln -s $bin_path/autoinit_gestern.sh autoinit_gestern
  ln -s $bin_path/backup_file.sh backup_file
  ln -s $bin_path/create_info_file.sh create_info_file
  ln -s $bin_path/customize_info.sh customize_info
@@ -52,3 +52,4 @@ cd /usr/local/bin || exit
  ln -s $bin_path/update_files.sh update_files
  ln -s $bin_path/update_infos.sh update_infos
  ln -s $bin_path/vinfo.sh vinfo
+	

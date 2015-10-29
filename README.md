@@ -8,7 +8,7 @@ http://msoon.kochab.uberspace.de/infosystem_intro.webm (better download)
 
 we need the following tools:
 
-git, bc, wget, sqlite3, sed, awk, curl, surfraw (only for option -g)
+git, bc, wget, sqlite3, sed, gawk, curl, surfraw (only for option -g)
 
 
 and some editor like vim or nano defined in $EDITOR
@@ -30,6 +30,6 @@ sqlite3 $database < infosystem.sql
 
 ###further notes
 also helpful is:
-echo "set completion-ignore-case On" >> ~./inputrc
+echo "set completion-ignore-case On" >> ~/.inputrc
 
 files and instructions for mobile use will follow.
