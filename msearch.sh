@@ -14,9 +14,9 @@ EXIT_BUG=10
 #echo ${0%/*}
 
 source ${0%/*}/config 2> /dev/null 
-source /media/daten/bin/config #benötigt für loop warum auch immmer... #TODO absoluter Pfad beseitigen
+source /media/daten/bin/config #benÃ¶tigt fÃ¼r loop #TODO absoluter Pfad beseitigen
 
-# Variablen für Optionsschalter hier mit Default-Werten vorbelegen
+# Variablen fÃ¼r Optionsschalter hier mit Default-Werten vorbelegen
 #VERBOSE=n #now in global config
 OPTFILE=""
 file_search=""
@@ -28,12 +28,12 @@ use_google=""
 use_IMDB=""
 show_only=""
 grep_only=""
-#min_catagorys="" #default: items müssen in allen Kategorien sein absolete!
+#min_catagorys="" #default: items mÃ¼ssen in allen Kategorien sein absolete!
 min_catagorys=""
 categories="''"
 ex_category="''"
 offset=""
-item_type_to_search=0 #default: infos, links und files werden gesucht - vorsicht id für files hier 4!
+item_type_to_search=0 #default: infos, links und files werden gesucht - vorsicht id fÃ¼r files hier 4!
 parameters="" #for history
 sort_order="category_match desc, rating desc, date desc" #Standard: Bestbewerteste und neueste zuerst
 hits_before_asking=4 #Ask for proceeding if there are more than defined hits
@@ -54,18 +54,18 @@ function usage
 {
 	echo "Usage: $SCRIPTNAME [-h] [-v] [-i|-l|-f] [-o hits] [-n num_of_categorys] [-x category_to_exclude] [other options] [-s searchpattern] [-t offset] [categories]" >&2
 	echo ""
-	echo "-g	      use google"
-	echo "-m        use IMDB (needs parameter s)"	
-	echo "-x 	      one category_to_exclude e.g. cat1 or more \"cat1','cat2','cat3\""
-	echo "-c	      count hits - default files if -i or -l not choosen"
-	echo "-e	      search in e-mails and other text-files"
-	echo "-u        unsharp-search ü,ä,ö,ß"
-	echo "-d        search since or before or exact date e.g. \">'2010-06-15'\" " #not good looking but flexible :-)
-	echo "-p        prevent writing history"
-	echo "-q        q-mode only output item title's (usable for questions)"
-	echo "-w        aditional where-part"
-	echo "-k        keep results"
-	echo "-r        only excerpt of infotext"
+	echo "-g	use google"
+	echo "-m	use IMDB (needs parameter s)"	
+	echo "-x	one category_to_exclude e.g. cat1 or more \"cat1','cat2','cat3\""
+	echo "-c	count hits - default files if -i or -l not choosen"
+	echo "-e	search in e-mails and other text-files"
+	echo "-u	unsharp-search Ã¼,Ã¤,Ã¶,ÃŸ"
+	echo "-d	search since or before or exact date e.g. \">'2010-06-15'\" " #not good looking but flexible :-)
+	echo "-p	prevent writing history"
+	echo "-q	q-mode only output item title's (usable for questions)"
+	echo "-w	aditional where-part"
+	echo "-k	keep results"
+	echo "-r	only excerpt of infotext"
 	echo ""
 	[[ $# -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
 }
@@ -102,7 +102,7 @@ while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 			 echo using some software to read information texts
 			 ;;
 		b)      #Breadcrump Mode
-			#TODO -b saubere Lösung mit args_without_b ohne sed und mit Parameter -d ermöglichen
+			#TODO -b saubere LÃ¶sung mit args_without_b ohne sed und mit Parameter -d ermÃ¶glichen
 			args_without_b=`echo "$@" | sed "s/-b/-/g"  | sed "s/- / /g" | sed "s/--/-/g"` 
 			database= #prevent access of running script 
 			loop 2 "msearch -p -oINK -tPOSITION $args_without_b"
@@ -168,8 +168,8 @@ while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 			offset="OFFSET $OPTARG"
 			parameters="$parameters""t$OPTARG" #for history
 			;;
-		u)      #benötigt option s
-			search_pattern_u=`echo $search_pattern | sed "s/ö/oe/g" | sed "s/ä/ae/g" | sed "s/ü/ue/g" | sed "s/ß/ss/g"`
+		u)      #benÃ¶tigt option s
+			search_pattern_u=`echo $search_pattern | sed "s/Ã¶/oe/g" | sed "s/Ã¤/ae/g" | sed "s/Ã¼/ue/g" | sed "s/ÃŸ/ss/g"`
 			file_search="and ((files.name like '%""$search_pattern""%') or (files.name like '%""$search_pattern_u""%'))"
 			info_search="and ((infos.name like '%""$search_pattern""%') or (infos.text like '%""$search_pattern""%') or (infos.name like '%""$search_pattern_u""%') or (infos.text like '%""$search_pattern_u""%'))"
 			link_search="and ((links.name like '%""$search_pattern""%') or (links.name like '%""$search_pattern_u""%'))"
@@ -207,7 +207,7 @@ while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 		\?)        echo "Unbekannte Option \"-$OPTARG\"." >&2
 			usage $EXIT_ERROR
 			;;
-		:)        echo "Option \"-$OPTARG\" benötigt ein Argument." >&2
+		:)        echo "Option \"-$OPTARG\" benÃ¶tigt ein Argument." >&2
 			usage $EXIT_ERROR
 			;;
 		*)        echo "Dies kann eigentlich gar nicht passiert sein..."
@@ -220,7 +220,7 @@ done
 
 
 j=0
-# Verbrauchte Argumente überspringen
+# Verbrauchte Argumente Ã¼berspringen
 shift $(( OPTIND - 1 ))
 
 # Eventuelle Tests auf min./max. Anzahl Argumente hier
@@ -228,7 +228,7 @@ if (( $# < 1 )) ; then
 	#echo "All infos in zone $zones:"
 	echo ""
 else
-	# Kategorien auswählen
+	# Kategorien auswÃ¤hlen
 	for ARG ; do
 		if [[ $VERBOSE = y ]] ; then
 			echo -n "Argument: $ARG"
@@ -329,7 +329,7 @@ do
 
 		#20111009 Es werden keine backups mehr gesucht
 		 dbquery="select files.id, files.inode, files.name, files.disksource, count(*) as category_match, files.rating from $categories_clause where 1=1 $file_search $ex_category_clause $search_date $WHERE_PART and (files.binode=0 or files.binode is null) and files.zone in (select zone from zones where zones.zones=$zones)
-		group by files.id having category_match>=$# $min_catagorys order by rating desc $show_only $offset" #TODO evtl date hinzufügen und $sort_order verwenden
+		group by files.id having category_match>=$# $min_catagorys order by rating desc $show_only $offset" #TODO evtl date hinzufÃ¼gen und $sort_order verwenden
 		
 		hits=`sqlite3 $database "select count(*) from ($dbquery) ;"`
 	
@@ -364,7 +364,7 @@ do
 			rm -r $ramdisk/files/* 2> /dev/null
 		fi
 
-		#symlinks für gefundene Dateien anlegen
+		#symlinks fÃ¼r gefundene Dateien anlegen
 		while read line
 		do
 			echo ""
@@ -571,7 +571,7 @@ do
 			fi
 
 # Infos geordnet nach Kategorie_Treffer und rating und Datum ausgeben
-# 2013-05-16 msoon: select mit UNION ALL und wieder eingeführtem category_match
+# 2013-05-16 msoon: select mit UNION ALL und wieder eingefÃ¼hrtem category_match
 dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, DateTime(infos.date), DateTime(infos.expiration) from $categories_clause where 1=1 $info_search $ex_category_clause $search_date $WHERE_PART and infos.zone in (select zone from zones where zones.zones=$zones)
 		group by infos.id having category_match>=$# $min_catagorys order by $sort_order $show_only $offset"
 		#2012-11-17 count hits everytime like other unix commands do :-)
@@ -625,7 +625,7 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 		##first_hit=`head -n1 /mnt/ramdisk/temp_infos`
 		#fi
 
-		# Infos temporär als Dateien anlegen
+		# Infos temporÃ¤r als Dateien anlegen
 		while read line
 		do
 			id=`echo "$line" | cut -f2 -d'|'`
@@ -758,7 +758,7 @@ fi
 
 if [[ $use_google == 1 ]] ; then
 	surfraw google $search_pattern
-	#später evtl möglich: python-gdata googlecl 
+	#spÃ¤ter evtl mÃ¶glich: python-gdata googlecl 
 fi
 
 if [[ $open_filemanager == 1 ]] ; then
