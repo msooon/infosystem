@@ -5,6 +5,10 @@ bin_path=/media/daten/bin
 mkdir $bin_path || exit
 cd /usr/local/bin || exit
 
+# choose a symlink to work easier with categories
+#ln -s /mnt/ramdisk/category /category
+#ln -s /tmp/category /category
+
  ln -s $bin_path/config config
 
  ln -s $bin_path/add_category_alias.sh add_category_alias
@@ -27,9 +31,6 @@ cd /usr/local/bin || exit
  ln -s $bin_path/infocron_weekly.sh infocron_weekly
  ln -s $bin_path/loop.sh loop
  ln -s $bin_path/msearch.sh msearch
- ln -s $bin_path/random_line.sh random_line
- ln -s $bin_path/random_scene.sh random_scene
- ln -s $bin_path/rate_items.sh rate_items
  ln -s $bin_path/rm_category_alias.sh rm_category_alias
  ln -s $bin_path/rm_category.sh rm_category
  ln -s $bin_path/rm_file.sh rm_file
