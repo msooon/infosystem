@@ -1,7 +1,9 @@
 #!/bin/bash
 
+source ${0%/*}/config  #for definition of $base_path
+
 #Notice: if you change bin_path you also have to change same static path in msearch.sh
-bin_path=/media/daten/bin
+bin_path=/$base_path/infosystem
 mkdir $bin_path || exit
 cd /usr/local/bin || exit
 
