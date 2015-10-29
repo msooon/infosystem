@@ -2,6 +2,7 @@ zones=1 #1 private 2 buisness 3 both 4:protected (eg. passwords) 8:public www
 base_path=/media/daten
 database=$base_path/infosystem.db
 backup=$base_path/backup
+infosystem=$base_path/infosystem
 #pub_db=$base_path/infosystem_anon.db
 #pub_db=/mnt/ftp/infosystem_anon.db
 use_add_db=y #dbs from add_db file
