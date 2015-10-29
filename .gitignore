@@ -2,4 +2,6 @@ config
 autoinit_own.sh
 *.db
 *.sqlite
-dbs/
+add_dbs/
+cache/
+add_db
