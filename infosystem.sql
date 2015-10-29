@@ -124,4 +124,8 @@ INSERT INTO "zones" VALUES(101,3,11);
 INSERT INTO "zones" VALUES(102,5,9);
 INSERT INTO "zones" VALUES(103,5,11);
 
+CREATE TABLE cronjobs(id integer PRIMARY KEY,name text, lastModified datetime);
+INSERT INTO "cronjobs" VALUES(1,'daily',(select date()));
+INSERT INTO "cronjobs" VALUES(2,'weekly',(select date()));
+
 COMMIT;
