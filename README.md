@@ -1,8 +1,6 @@
 # infosystem
 A shell based information management system (2010-2015)
 
-git and easy install under construction
-
 You can watch an intro here: 
 http://msoon.kochab.uberspace.de/infosystem_intro.webm (better download)
 
@@ -30,3 +28,8 @@ as normal user: source config
 
 sqlite3 $database < infosystem.sql
 
+###further notes
+also helpful is:
+echo "set completion-ignore-case On" >> ~./inputrc
+
+files and instructions for mobile use will follow.
