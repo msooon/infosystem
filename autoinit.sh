@@ -25,6 +25,19 @@ if [ -e leave_mobile_mode.sql ] ; then
 	sqlite3 $database < leave_mobile_mode.sql 2> /dev/null
 fi
 
+if [[ $use_add_db = y ]] ; then
+	cd $infosystem/add_dbs
+	#first check internet connection
+	if ping -c 1 -w 5 uberspace.de &> /dev/null ; then
+		rm $infosystem/add_dbs/*
+		echo -e "\E[36m Get additional databases: "; tput sgr0; echo ""
+		wget -i ../add_db
+	fi
+	ls -1 > $cached_files/add_dbs
+	cd -
+fi
+
+
 cp $database $backup/infosystem_`date +%d`.db
 
 today=`date +%d`

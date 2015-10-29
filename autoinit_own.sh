@@ -33,4 +33,7 @@ if [ -e $ramdisk/category/citation ] ; then # test -e /mnt/... ; then
 	msearch $msearch_opt_args -i -o1 -t$POSITION -x "done" citation 
 fi
 
+#cd ~
+#~/papercut_fix.sh > /dev/null
+
 # You can add further searches here

@@ -2,11 +2,11 @@
 
 source ${0%/*}/config  #for definition of $base_path
 
-#Notice: if you change bin_path or base_path you also have to change same static path in msearch.sh
-bin_path=/$base_path/infosystem
+#Notice: if you change bin_path you also have to change static path in msearch.sh
+bin_path=$infosystem
 mkdir $bin_path || exit
-mkdir -p /$base_path/infosystem/cache
-mkdir -p /$base_path/infosystem/add_dbs
+mkdir -p $infosystem/cache
+mkdir -p $infosystem/add_dbs
 cd /usr/local/bin || exit
 
 # choose a symlink to work easier with categories

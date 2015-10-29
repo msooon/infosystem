@@ -14,7 +14,7 @@ EXIT_BUG=10
 #echo ${0%/*}
 
 source ${0%/*}/config 2> /dev/null 
-source /media/daten/bin/config #benötigt für loop #TODO absoluter Pfad beseitigen
+source /media/daten/infosystem/config #benötigt für loop #TODO absoluter Pfad beseitigen
 
 # Variablen für Optionsschalter hier mit Default-Werten vorbelegen
 #VERBOSE=n #now in global config
@@ -767,7 +767,6 @@ fi
 
 echo ""
 
-
 #echo ADDITIONAL_DB: $ADDITIONAL_DB
 if [[ $use_add_db = y ]] ; then
 # if in allready in additional DB exit else search other dbs
@@ -781,7 +780,7 @@ if [[ $use_add_db = y ]] ; then
 				echo "Results from $line:"
 			fi
 			msearch -z $line $ALL_ARGS 2> /dev/null #TODO
-		done < $add_db
+		done < $cached_files/add_dbs
 		##fi
 	fi
 fi
