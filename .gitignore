@@ -1,2 +1,5 @@
 config
 autoinit_own.sh
+*.db
+*.sqlite
+dbs/
