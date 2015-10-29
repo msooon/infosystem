@@ -1,5 +1,5 @@
 #!/bin/bash
-# Skript: autoinit.sh
+# Skript: autoinit_own.sh
 
 # Globale Variablen
 SCRIPTNAME=$(basename $0 .sh)
@@ -32,8 +32,5 @@ if [ -e $ramdisk/category/citation ] ; then # test -e /mnt/... ; then
 	POSITION=$[ ( $RANDOM % `msearch $msearch_opt_args -ci -x "done" citation ` )  ]
 	msearch $msearch_opt_args -i -o1 -t$POSITION -x "done" citation 
 fi
-
-#cd ~
-#~/papercut_fix.sh > /dev/null
 
 # You can add further searches here
