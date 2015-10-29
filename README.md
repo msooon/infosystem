@@ -22,6 +22,8 @@ cd infosystem
 
 edit files: config and install.sh
 
+chmod +x *.sh
+
 as superuser: ./install.sh
 
 as normal user: source config
