@@ -1,12 +1,16 @@
 #!/bin/bash
 
 source ${0%/*}/config  #for definition of $base_path
-#Notice: if you change bin_path you also have to change static path in msearch.sh or use following symlink
+#Notice: if you change $bin_path or $infosystem in config you also have to change static path in msearch.sh or use following symlink
 #ln -s $base_path /media/daten
 bin_path=$infosystem
+user=1000 #in most cases this is right - but you can also add your username here
 mkdir $bin_path || exit
-mkdir -p $infosystem/cache
-mkdir -p $infosystem/add_dbs
+mkdir -p $infosystem/cache  2> /dev/null  #TODO check before
+mkdir -p $infosystem/add_dbs  2> /dev/null
+mkdir -p $backup 2> /dev/null
+chown -R $user:$user $infosystem
+
 cd /usr/local/bin || exit
 
 # choose a symlink to work easier with categories
