@@ -5,7 +5,7 @@ source ${0%/*}/config  #for definition of $base_path
 #ln -s $base_path /media/daten
 bin_path=$infosystem
 user=1000 #in most cases this is right - but you can also add your username here
-mkdir $bin_path || exit
+mkdir $bin_path  2> /dev/null 
 mkdir -p $infosystem/cache  2> /dev/null  #TODO check before
 mkdir -p $infosystem/add_dbs  2> /dev/null
 mkdir -p $backup 2> /dev/null
