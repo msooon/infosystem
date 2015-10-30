@@ -29,7 +29,7 @@ if [[ $use_add_db = y ]] ; then
 	cd $infosystem/add_dbs
 	#first check internet connection
 	if ping -c 1 -w 5 uberspace.de &> /dev/null ; then
-		rm $infosystem/add_dbs/*
+		rm $infosystem/add_dbs/* 2> /dev/null
 		echo -e "\E[36m Get additional databases: "; tput sgr0; echo ""
 		wget -i ../add_db
 	fi
