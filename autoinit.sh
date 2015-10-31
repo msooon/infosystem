@@ -31,7 +31,12 @@ if [[ $use_add_db = y ]] ; then
 	if ping -c 1 -w 5 uberspace.de &> /dev/null ; then
 		rm $infosystem/add_dbs/* 2> /dev/null
 		echo -e "\E[36m Get additional databases: "; tput sgr0; echo ""
-		wget -i ../add_db
+		if [ -e ../add_db ] ; then
+			wget -i ../add_db
+		fi
+		if [ -e ../add_db_scp ] ; then
+			scp `cat ../add_db_scp` .
+		fi
 	fi
 	ls -1 > $cached_files/add_dbs
 	cd -
@@ -229,7 +234,8 @@ echo ""
 
 ./autoinit_own.sh
 
-echo ""
+
+ echo ""
 
 #TIMESTAMP=`date +%H%M`
 TIMESTAMP=`date +%H`

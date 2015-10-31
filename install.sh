@@ -9,7 +9,17 @@ mkdir $bin_path  2> /dev/null
 mkdir -p $infosystem/cache  2> /dev/null  #TODO check before
 mkdir -p $infosystem/add_dbs  2> /dev/null
 mkdir -p $backup 2> /dev/null
+
+#pub_dbs 
+sqlite3 $database < infosystem.sql
+cp $database template.db
+sqlite3 template.db "delete from infos;"
+cp template.db pub_db/infosystem_8.db #for public www (zone 8)
+cp template.db pub_db/infosystem_9.db #for personal contacts (zone 8+1)
+cp template.db pub_db/infosystem_10.db #for buisness contacts (zone 8+2)
+
 chown -R $user:$user $infosystem
+chown -R $user:$user $database
 
 cd /usr/local/bin || exit
 

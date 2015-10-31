@@ -10,10 +10,9 @@ we need the following tools:
 
 git, bc, wget, sqlite3, sed, gawk, curl, surfraw (only for option -g)
 
-
 and some editor like vim or nano defined in $EDITOR
 
-export EDITOR="/usr/bin/vim"
+export EDITOR="/usr/bin/vim" #or nano or something else
 in ~/.bashrc
 
 git clone https://github.com/msooon/infosystem.git 
@@ -25,10 +24,6 @@ edit files: config and install.sh
 chmod +x *.sh
 
 as superuser: ./install.sh
-
-as normal user: source config
-
-sqlite3 $database < infosystem.sql
 
 ###further notes
 also helpful is:
