@@ -32,7 +32,6 @@ INSERT INTO "category" VALUES(9,'yearly',0,3);
 INSERT INTO "category" VALUES(10,'done',0,7);
 
 -- add default zones
-CREATE TABLE zones (id integer PRIMARY KEY, zones integer, zone integer, Unique (zones,zone));
 INSERT INTO "zones" VALUES(1,1,1);
 INSERT INTO "zones" VALUES(2,1,3);
 INSERT INTO "zones" VALUES(3,1,8);
