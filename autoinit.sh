@@ -16,6 +16,17 @@ grep -o 'zones=.' ${0%/*}/config
 #head ${0%/*}/config
 echo ""
 
+read -n 1 -p "view/edit config before? (Y/n) " choice
+if [[ $choice == "n" ]] ; then
+	echo ""
+	echo "existing config will be used"
+else
+	$EDITOR ${0%/*}/config 
+	source ${0%/*}/config
+fi
+echo ""
+msearch_opt_args="-pkr40"  #example "-v"
+
 #sqlite3 $database "select id,name,zone,dateAdded,expiration from infos where date(lastModified)>\"`date -d \"5 days\" +%Y-%m-%d`\"\";"
 #diff -q /media/daten/bin/infosystem /mnt/ftp/infosystem/infosystem
 
@@ -40,6 +51,7 @@ if [[ $use_add_db = y ]] ; then
 	fi
 	ls -1 > $cached_files/add_dbs
 	cd -
+	echo ""
 fi
 
 
@@ -61,19 +73,8 @@ if [[ $today = 01 ]] ; then
 	./set_zone.sh $zones
 fi
 
-read -n 1 -p "view/edit config before? (Y/n) " choice
-if [[ $choice == "n" ]] ; then
-	echo ""
-	echo "existing config will be used"
-else
-	$EDITOR ${0%/*}/config 
-	source ${0%/*}/config
-fi
-
-
-msearch_opt_args="-pkr40"  #example "-v"
 add_category_dirs
-echo msearch_opt_args=$msearch_opt_args
+#echo msearch_opt_args=$msearch_opt_args
 echo "running cronjobs..."
 run_needed=`sqlite3 $database "select Date('now')>Date(lastModified,'+7 day') from cronjobs where name='weekly'; "`
 if [[ $run_needed = 1 ]] ; then
