@@ -464,7 +464,7 @@ do
 
 			fi
 
-			dbquery="select links.id, replace(links.name,'/',' '), links.source, count(*) as category_match, links.rating, Date(links.date) from $categories_clause where 1=1 $link_search $ex_category_clause and (mirror=0 or mirror is null) $search_date $WHERE_PART and links.zone in (select zone from zones where zones.zones=$zones)
+			dbquery="select links.id, replace(links.name,'/',' '), links.source, count(*) as category_match, links.rating, Date(links.date), links.zone from $categories_clause where 1=1 $link_search $ex_category_clause and (mirror=0 or mirror is null) $search_date $WHERE_PART and links.zone in (select zone from zones where zones.zones=$zones)
 		group by links.id having category_match>=$# $min_catagorys order by $sort_order $show_only $offset"
 	
 		hits=`sqlite3 $database "select count(*) from ($dbquery) ;"`
@@ -504,11 +504,12 @@ do
 			rating=`echo "$line" | cut -f5 -d'|'`
 			date=`echo "$line" | cut -f6 -d'|'`
 			cmatch=`echo "$line" | cut -f4 -d'|'`
+			zone=`echo "$line" | cut -f7 -d'|'`
 
 			if [[ $ADDITIONAL_DB = y ]] ; then
-				echo " (READ ONLY)  \"$linkname\" [ Date: $date ]  (rating:$rating) "
+				echo " `basename $database`(RO)  \"$linkname\" [ Date: $date ]  (rating:$rating) "
 			else
-				echo " (ID=$id)  \"$linkname\" [ Date: $date ] `if [[ $min_catagorys > 0 ]] ; then echo cm:$cmatch; fi` (rating:$rating) " 
+				echo " (ID=$id)  \"$linkname\" [ Date: $date ] `if [[ $min_catagorys > 0 ]] ; then echo cm:$cmatch; fi`[z:$zone] (rating:$rating) " 
 			fi
 			echo -e "\E[94m$url"; tput sgr0  #url wird blau ausgegeben  
 			echo "$url" > $ramdisk/links/"$id"_"$linkname"
@@ -572,7 +573,7 @@ do
 
 # Infos geordnet nach Kategorie_Treffer und rating und Datum ausgeben
 # 2013-05-16 msoon: select mit UNION ALL und wieder eingeführtem category_match
-dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, DateTime(infos.date), DateTime(infos.expiration) from $categories_clause where 1=1 $info_search $ex_category_clause $search_date $WHERE_PART and infos.zone in (select zone from zones where zones.zones=$zones)
+dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, DateTime(infos.date), DateTime(infos.expiration), infos.zone from $categories_clause where 1=1 $info_search $ex_category_clause $search_date $WHERE_PART and infos.zone in (select zone from zones where zones.zones=$zones)
 		group by infos.id having category_match>=$# $min_catagorys order by $sort_order $show_only $offset"
 		#2012-11-17 count hits everytime like other unix commands do :-)
 
@@ -634,6 +635,7 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 			date=`echo "$line" | cut -f5 -d'|' | sed "s/ 00:00:00//g"` #not necassary to show
 			expiration=`echo "$line" | cut -f6 -d'|' | sed "s/ 23:59:59//g"` #not necassary to show
 			cmatch=`echo "$line" | cut -f3 -d'|'`
+			zone=`echo "$line" | cut -f7 -d'|'`
 
 			if [[ $VERBOSE = y ]] ; then
 			echo "line=$line"
@@ -643,9 +645,9 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 
 			echo ""
 			echo "*************************************************" 
-			echo -e " \E[32m$infoname  [ Date: \"$date\" \"$expiration\" ]  `if [[ $min_catagorys > 0 ]] ; then echo cm:$cmatch; fi` (rating:$rating)"; tput sgr0  #Infoname is shown green
+			echo -e " \E[32m$infoname  [ Date: \"$date\" \"$expiration\" ] `if [[ $min_catagorys > 0 ]] ; then echo cm:$cmatch; fi`[z:$zone] (rating:$rating)"; tput sgr0  #Infoname is shown green
 			if [[ $ADDITIONAL_DB = y ]] ; then
-				echo "[ READ ONLY ]"
+				echo "[ `basename $database`(RO) ]"
 			else
 				echo "use: vinfo \"$ramdisk/infos/$infoname\""
 			fi
