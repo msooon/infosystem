@@ -450,7 +450,7 @@ do
 					categories_clause=" $categories_clause UNION ALL"
 				fi
 				#echo "j: $j"
-				categories_clause="$categories_clause select v_links.id, v_links.name, v_links.source, v_links.rating, v_links.zone, DateTime(v_links.date) as date, v_links.mirror  from v_links where v_links.id in 
+				categories_clause="$categories_clause select v_links.id, v_links.name, v_links.source, v_links.rating, v_links.zone, DateTime(v_links.date) as date, v_links.mirror,  DateTime(v_links.dateAdded) as dateAdded from v_links where v_links.id in 
 				(
 				select item_id from category_link, category where category_link.category_id=category.id AND category.id in
 					(
