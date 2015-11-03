@@ -464,7 +464,7 @@ do
 
 			fi
 
-			dbquery="select links.id, replace(links.name,'/',' '), links.source, count(*) as category_match, links.rating, Date(links.date), links.zone from $categories_clause where 1=1 $link_search $ex_category_clause and (mirror=0 or mirror is null) $search_date $WHERE_PART and links.zone in (select zone from zones where zones.zones=$zones)
+			dbquery="select links.id, replace(links.name,'/',' '), links.source, count(*) as category_match, links.rating, Date(links.date), links.zone from $categories_clause where 1=1 $link_search $ex_category_clause and (mirror=0 or mirror is null or mirror='') $search_date $WHERE_PART and links.zone in (select zone from zones where zones.zones=$zones)
 		group by links.id having category_match>=$# $min_catagorys order by $sort_order $show_only $offset"
 	
 		hits=`sqlite3 $database "select count(*) from ($dbquery) ;"`
