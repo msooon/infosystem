@@ -46,15 +46,15 @@ for i in 8 9 10; do
  #maybe also adding item_ref later
 
 	#delete todo's in public'dbs
-	check=`sqlite3 $infosystem/pub_dbs/infosystem_$i.db "select item_id from category_link where category_id=2;"`; for i in $check ; do rm_tag_link $i todo ; done
-	check=`sqlite3 $infosystem/pub_dbs/infosystem_$i.db "select item_id from category_info where category_id=2;"`; for i in $check ; do rm_tag_info $i todo ; done
+	sqlite3 $infosystem/pub_dbs/infosystem_$i.db "delete from category_item where category_id=5;";
 
 done
 
 #then you have to choose where you want upload your public db's
-# scp /pub_dbs/infosystem_8.db public@shared_server:html
-# scp /pub_dbs/infosystem_9.db user@your_server:/var/www
-# scp /pub_dbs/infosystem_10.db user@server_at_work:
+
+# scp -P 22 $infosystem/pub_dbs/infosystem_8.db public@shared_server:html
+# scp $infosystem/pub_dbs/infosystem_9.db user@your_server:/var/www
+# scp $infosystem/pub_dbs/infosystem_10.db user@server_at_work:
 
 fi
 
