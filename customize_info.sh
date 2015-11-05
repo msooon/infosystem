@@ -17,7 +17,7 @@ choice="n"
 echo ""
 
 #alternativ msearch Einbauen - ist aber eher overkill
-info_name=`sqlite3 $database "select infos.name || ' [ Date: ' || dateAdded || ' ] ',' [ ' || date || ' ] ', ' [ ' || expiration || ' ] ' from infos where id=$id and infos.zone in (select zone from zones where zones.zones=$zones);"`
+info_name=`sqlite3 $database "select infos.name || ' [ Date: ' || dateAdded || ' ] ',' [ ' || date || ' ] ', ' [ ' || expiration || ' ] ', ' [ z:' || zone || ' ] ' from infos where id=$id and infos.zone in (select zone from zones where zones.zones=$zones);"`
 
 if [[ $info_name == "" ]] ; then
 	exit $EXIT_SUCCESS
@@ -211,7 +211,7 @@ do
 	elif [[ $choice == "z" ]] ; then
 		echo ""
 		echo ""
-		read -p "Enter new zone (1=private,2=work,3=both): " set_zone
+		read -p "Enter new zone (1=private,2=work,3=both [+4 protected, +8 public] ): " set_zone
 		sqlite3 $database "update infos set zone='$set_zone' where id=$id;"
 
 
