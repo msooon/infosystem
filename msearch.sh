@@ -781,7 +781,7 @@ if [[ $use_add_db = y ]] ; then
 			if [[ $VERBOSE = y ]] ; then
 				echo "Results from $line:"
 			fi
-			msearch -z $infosystem/add_dbs/$line $ALL_ARGS 2> /dev/null #TODO
+			msearch -z $infosystem/add_dbs/$line -k $ALL_ARGS
 		done < $cached_files/add_dbs
 		##fi
 	fi
