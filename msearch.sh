@@ -507,7 +507,7 @@ do
 			zone=`echo "$line" | cut -f7 -d'|'`
 
 			if [[ $ADDITIONAL_DB = y ]] ; then
-				echo " `basename $database`(RO)  \"$linkname\" [ Date: $date ]  (rating:$rating) "
+				echo -e "\E[90m `basename $database`(RO)  \"$linkname\" [ Date: $date ]  (rating:$rating) "; tput sgr0
 			else
 				echo " (ID=$id)  \"$linkname\" [ Date: $date ] `if [[ $min_catagorys > 0 ]] ; then echo cm:$cmatch; fi`[z:$zone] (rating:$rating) " 
 			fi
@@ -647,7 +647,7 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 			echo "*************************************************" 
 			echo -e " \E[32m$infoname  [ Date: \"$date\" \"$expiration\" ] `if [[ $min_catagorys > 0 ]] ; then echo cm:$cmatch; fi`[z:$zone] (rating:$rating)"; tput sgr0  #Infoname is shown green
 			if [[ $ADDITIONAL_DB = y ]] ; then
-				echo "[ `basename $database`(RO) ]"
+				echo -e "\E[90m [ `basename $database`(RO) ]"; tput sgr0
 			else
 				echo "use: vinfo \"$ramdisk/infos/$infoname\""
 			fi
@@ -735,7 +735,7 @@ if [[ $use_email == 1 ]] ; then
 	cat $email_and_files | grep $grep_only -i -C3 "$search_pattern"  # grep without cat and context has the problem that filename is in each line
 fi
 
-
+#TODO parameters should be in config file
 if [[ $use_IMDB == 1 ]] ; then
 	echo -e "\E[93m The IMDB: "; tput sgr0
 	# Requires imdbpy python-lxml
@@ -771,7 +771,7 @@ echo ""
 
 #echo ADDITIONAL_DB: $ADDITIONAL_DB
 if [[ $use_add_db = y ]] ; then
-# if in allready in additional DB exit else search other dbs
+# if allready in additional DB exit else search other dbs
 	if [[ $ADDITIONAL_DB = y ]] ; then
 		exit $EXIT_SUCCESS
 	else
@@ -781,7 +781,7 @@ if [[ $use_add_db = y ]] ; then
 			if [[ $VERBOSE = y ]] ; then
 				echo "Results from $line:"
 			fi
-			msearch -z $infosystem/add_dbs/$line -k $ALL_ARGS
+			msearch -z $infosystem/add_dbs/$line -k $ALL_ARGS 2> /dev/null
 		done < $cached_files/add_dbs
 		##fi
 	fi
