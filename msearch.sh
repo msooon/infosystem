@@ -95,6 +95,13 @@ category_search()
 #save args for later
 ALL_ARGS=$@
 
+ALL_ARGS_FIX=''
+
+for i in "$@"; do 
+#	# echo ALL_ARGS="$ALL_ARGS"
+	ALL_ARGS_FIX="$ALL_ARGS_FIX \"${i//\"/\\\"}\""
+done
+
 #Parse paremeter
 while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 	case $OPTION in
@@ -781,8 +788,14 @@ if [[ $use_add_db = y ]] ; then
 			if [[ $VERBOSE = y ]] ; then
 				echo "Results from $line:"
 			fi
+
 			msearch -z $infosystem/add_dbs/$line -k $ALL_ARGS 2> /dev/null
-		done < $cached_files/add_dbs
+#			count=`msearch -z $infosystem/add_dbs/$line -kc $ALL_ARGS 2> /dev/null`
+#		if [[ $count == 0 ]] ; then
+#			echo -e "\E[33m there are no results from $line (maybe problem with quotes) try to search manually again: "; tput sgr0
+#			echo "  msearch -z $infosystem/add_dbs/$line -k $ALL_ARGS_FIX"
+#		fi
+		done < $infosystem/cache/add_db_names 
 		##fi
 	fi
 fi
