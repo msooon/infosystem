@@ -68,23 +68,11 @@ do
 	elif [[ $choice == "f" ]] ; then
 
 		#	msearch -f `echo $category | sed "s/,/ /g" | sed "s/'//g"`
-		POSITION=0
-		INK=5
-		while [[ $choice != n ]] 
-		do
 
-			sqlite3 -header $database "select distinct id, files.name from files, category_files where files.id=category_files.item_id and category_files.category_id in (select category_id from category_info where item_id=$id)  and files.zone in (select zone from zones where zones.zones=$zones) LIMIT $INK OFFSET $POSITION;"
-			echo ""
-			echo ""
-			read -n 1 -p "Proceed? (Y/n)" choice #
-
-			if [[ $choice = n ]] ; then
-				echo "" 
-			fi
-			POSITION=`expr $POSITION + $INK`
-
-		done
-
+		category=`sqlite3 $database "select distinct category.name from infos, category, category_info where infos.id=$id and category_info.item_id=infos.id and category_info.category_id=category.id and category.zone in (select zone from zones where zones.zones=$zones) order by category.name;"`
+	  echo category: $category	
+		msearch -kpqf -n1 -b $category | grep 'ID='
+		
 		read -p "Enter id of the file: " file_id #
 		echo ""
 		sqlite3 $database "insert into item_ref (item1_id, item1_type_id, item2_id, item2_type_id) values ($id, 1, $file_id, 3);"
@@ -132,22 +120,10 @@ do
 		echo ""
 		echo ""
 
-		POSITION=0
-		INK=5
-		while [[ $choice != n ]] 
-		do
+		category=`sqlite3 $database "select distinct category.name from infos, category, category_info where infos.id=$id and category_info.item_id=infos.id and category_info.category_id=category.id and category.zone in (select zone from zones where zones.zones=$zones) order by category.name;"`
+	  echo category: $category	
+		msearch -kpqi -n1 -b $category # | grep "rating:"
 
-			sqlite3 -header $database "select distinct id, infos.name from infos, category_info where infos.id=category_info.item_id and category_info.category_id in (select category_id from category_info where item_id=$id) and id!=$id and infos.zone in (select zone from zones where zones.zones=$zones) LIMIT $INK OFFSET $POSITION;"
-			echo ""
-			echo ""
-			read -n 1 -p "Proceed? (Y/n)" choice #
-
-			if [[ $choice = n ]] ; then
-				echo ""
-			fi
-			POSITION=`expr $POSITION + $INK`
-
-		done
 		echo ""	
 		read -p "Enter id of the info: " info_id
 		echo ""
