@@ -20,6 +20,7 @@ source ${0%/*}/config
 
 # search for updated websites
 sqlite3 $database "select distinct links.id, links.name, links.source from links,category_link,category where links.id=category_link.item_id and category_link.category_id=2;" > $ramdisk/sites_to_check
+#> $ramdisk/sites_to_check #temporär abgeschaltet
 
 while read line
 do
@@ -29,9 +30,12 @@ do
 	mkdir $cached_files/$id   2> /dev/null
 	cd $cached_files/$id
 	mv new old 2> /dev/null
-	wget -O temp $url 2> /dev/null
+	wget -O temp --user-agent="'"$useragent"'" $url 2> /dev/null
 	grep -v '<lastBuildDate>\|<pubDate>' temp > new  #needed for rss
 	rm temp
+	if [ -e prepare.sh ] ; then
+		./prepare.sh
+	fi
 	if [ -f "old" ]
 	then
 		#	diff -q new old
@@ -60,7 +64,7 @@ sqlite3 $database "update infos set date=DateTime(date,'+1 month') where id in (
 # yearly (monthly cronjob would be enough)
 sqlite3 $database "update infos set date=DateTime(date,'+1 year') where id in (select item_id from category_item where item_type_id=1 and category_id=9) and DateTime()>DateTime(date);"
 
-# delete old cached files
+	 # delete old cached files
 find $cached_files/*/ -maxdepth 2 -mtime +28 -name old -exec rm -rv -- "{}" \;
 find $cached_files/*/ -maxdepth 2 -mtime +28 -name new -exec rm -rv -- "{}" \; 2> /dev/null >>/dev/null
 # delete empty directories
