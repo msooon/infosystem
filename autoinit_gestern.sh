@@ -21,7 +21,9 @@ echo ""
 
 #ls -ahl $database /mnt/ftp/infosystem/infosystem
 
-sqlite3 $database < leave_mobile_mode.sql 2> /dev/null
+if [ -e leave_mobile_mode.sql ] ; then 
+	sqlite3 $database < leave_mobile_mode.sql 2> /dev/null
+fi
 
 read -n 1 -p "view/edit config before? (Y/n) " choice
 if [[ $choice == "n" ]] ; then
