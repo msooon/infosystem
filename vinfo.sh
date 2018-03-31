@@ -44,20 +44,39 @@ done
 # Verbrauchte Argumente überspringen
 shift $(( OPTIND - 1 ))
 
-if [ -e "$1" ] ; then
-	infoname=`echo $1 | awk -F'/' '//{print $NF}'`
-	cp "$1" "$cached_files/prev_versions/$infoname`date +%Y%m%d%H%M%S`"
-	$EDITOR "$1"  # info-datei öffnen 
+	#not elegant but works in most cases
+	id=`echo $1 | awk -F'/' '//{print $NF}' | awk -F'_' '//{print $NF}'`
+	infofile=`echo $ramdisk/infos/*_$id`
+	infoname=`echo $infofile | awk -F'/' '//{print $NF}'`
+
+#echo id=$id
+#echo infofile=$infofile
+#echo infoname=$infoname
+	if [ -e "$infofile" ] ; then
+	cp "$infofile" "$cached_files/prev_versions/$infoname`date +%Y%m%d%H%M%S`"
+
+	$EDITOR "$infofile"  # info-datei öffnen 
 else
-echo "temporarly info-file not found - please search again: msearch -s [info]"
-exit $EXIT_FAILURE # Wenn info-datei nicht existiert werden kann beenden um leere Datei zu vermeiden
+#echo "temporarly info-file not found - please search again: msearch -s [info]"
+	 #should check that info exists
+	 read -n 1 -p "Info not in Cache - try to find in DB again (Y/n)" choice #
+
+	 if [[ $choice = n ]] ; then
+		    echo ""
+				exit $EXIT_SUCCESS
+				 else
+  msearch -kpiw id="$id"
+	vinfo "$id"
+	exit $EXIT_SUCCESS #at least this command
+fi
+	#exit $EXIT_FAILURE # Wenn info-datei nicht existiert werden kann beenden um leere Datei zu vermeiden
 fi
 
-  id=`echo "$1" | awk -F'_' '//{print $NF}'`
-  sed -i "s/'/''/g" "$1"
+  #id=`echo "$1" | awk -F'_' '//{print $NF}'`
+  sed -i "s/'/''/g" "$infofile"
   #infoname=`echo $1 | cut -f1`  # ,2 -d'|' | sed "s/|/_/g"`
-sqlite3 $database "update infos set text='`cat \"$1\"`', lastModified=(select datetime()) where id=$id;"
-  sed -i "s/''/'/g" "$1" #needed if you want to reopen the file without search again
+sqlite3 $database "update infos set text='`cat \"$infofile\"`', lastModified=(select datetime()) where id=$id;"
+  sed -i "s/''/'/g" "$infofile" #needed if you want to reopen the file without search again
 
 #geöffnete Dateien höher bewerten, damit sie oben erscheinen
 sqlite3 $database "update infos set rating=rating+10 where id=$id;"
