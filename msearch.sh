@@ -345,6 +345,17 @@ do
 			exit $EXIT_SUCCESS
 		fi
 
+		if [ $hits -gt $hits_before_asking ] ; then
+
+			read -s -n 1 -p "There are $hits files to show: proceed (Y/n)? " choice
+			echo ""
+
+			case "$choice" in
+				n|N)	exit $EXIT_SUCCESS	;;
+				Y|y|"")	true	;;
+			esac
+		fi
+
 		if [[ $ex_category != "''" ]] ; then
 			ex_category_clause="and files.id not in (select distinct files.id from files, category, category_item where category_item.item_type_id=3 and category_item.category_id=category.id and category_item.item_id=files.id and (category.name in ($ex_category) or category.id in (select distinct category_id from category_alias where name in ($ex_category))) and category.zone in (select zone from zones where zones.zones=$zones)) "
 			if [[ $VERBOSE = y ]] ; then
@@ -374,7 +385,7 @@ do
 		#symlinks für gefundene Dateien anlegen
 		while read line
 		do
-			echo ""
+			#echo ""
 			inode=`echo "$line" | cut -f2 -d'|'`
 			filename=`echo "$line" | cut -f1,3 -d'|' | sed "s/|/_/g"`
 			id=`echo "$line" | cut -f1 -d'|'`
@@ -428,8 +439,8 @@ do
 
 		done < $ramdisk/temp_files
 
-		echo ""
-		echo ""
+		#echo ""
+		#echo ""
 
 	fi
 done
@@ -486,6 +497,17 @@ do
 			echo "LINK - SELECT"
 			date +%H:%M:%S:%N
 			echo "$dbquery ;"
+		fi
+
+		if [ $hits -gt $hits_before_asking ] ; then
+
+			read -s -n 1 -p "There are $hits links to show: proceed (Y/n)? " choice
+			echo ""
+
+			case "$choice" in
+				n|N)	exit $EXIT_SUCCESS	;;
+				Y|y|"")	true	;;
+			esac
 		fi
 
 		sqlite3 $database "$dbquery ;" > $ramdisk/temp_links
@@ -591,23 +613,16 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 			exit $EXIT_SUCCESS
 		fi
 
-		#if [ $hits -gt $hits_before_asking ] ; then
+		if [ $hits -gt $hits_before_asking ] ; then
 
-		#read -s -n 1 -p "There are $hits hits: proceed (Y/n)? " choice
-		#echo ""
+			read -s -n 1 -p "There are $hits infos to show: proceed (Y/n)? " choice
+			echo ""
 
-		#case "$choice" in
-		#        n|N)
-		#	exit $EXIT_SUCCESS
-		#	;;
-	#	*)
-		#	exit $EXIT_FAILURE
-		#	;;
-	#	Y|y|"")
-		#        true
-		#	;;
-		#	esac
-		#fi
+			case "$choice" in
+				n|N)	exit $EXIT_SUCCESS	;;
+				Y|y|"")	true	;;
+			esac
+		fi
 
 		if [[ $VERBOSE = y ]] ; then
 		  echo hits_before_asking: $hits_before_asking
@@ -667,17 +682,16 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 			else
 				sqlite3 $database "select text from infos where infos.id=$id;" | tee $ramdisk/infos/"$infoname" | head -n $EXCERPT_LINES
 			fi
-				#echo SHOW_REFS: "$SHOW_REFS"
 				if [[ $SHOW_REFS = a ]] ; then
 					echo ""
 					echo -e "\E[94m`sqlite3 $database \"select source from links, item_ref where ((item1_id=$id and item1_type_id=1 and item2_type_id=2 and item2_id=links.id) OR (item2_id=$id and item2_type_id=1 and item1_type_id=2 and item1_id=links.id)) AND zone in (select zone from zones where zones.zones=$zones);\"`"; tput sgr0  #url wird blau ausgegeben
 				#connected infos
-				echo ""
+			#	echo ""
 				echo "`sqlite3 $database \"select name from infos, item_ref where item1_id=$id and item1_type_id=1 and item2_type_id=1 and item2_id=infos.id AND zone in (select zone from zones where zones.zones=$zones);\"`"  #TODO auslagern
 				elif [[ $SHOW_REFS = y ]] ; then
 					# 2014-09-04 msoon: one category layer will used here
 					# maybe sqlite3 -list to show infos.text below
-					echo ""
+			#		echo ""
 					echo "`sqlite3 $database \"select name from infos, item_ref where item1_id=$id and item1_type_id=1 and item2_type_id=1 and item2_id=infos.id and item2_id in (select item_id from category_info where category_id in (select category_id from category_info where item_id=$id ) OR category_id in (select id from category where parent in (select category_id from category_info where item_id=$id) ) ) AND zone in (select zone from zones where zones.zones=$zones);\"`"
 
 
@@ -687,39 +701,6 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 			if [[ $USE_HISTORY = y ]] ; then
 				sqlite3 $database "insert into history (item_id,item_type_id,search_term,categories,ex_categories,zones,timestamp,command,parameters) values ($id,1,'$search_pattern',`echo $categories | sed "s/','/,/g"`,`echo $ex_category | sed "s/','/,/g"`,$zones,(select datetime()),'$SCRIPTNAME','$parameters');"
 			fi
-
-			#if [ $all_OMC -ne 1 ]^Jthen^Jprintf "Please enter a name : [>
-
-			#echo "Show next info (Y/n):"
-
-			#read show_next_info
-
-			#if [[ $show_next_info = n ]] ; then
-			#  exit $EXIT_SUCCESS
-			#else
-			#  echo ""
-			#fi
-
-			#while true; do
-			#    read -p "Show next info (Y/n):" yn
-			#    case $yn in
-			#        [n]* ) exit $EXIT_SUCCESS;;
-		#        [y]* ) echo "ok";;
-		#    esac
-		#done
-
-		#select result in Yes No Cancel
-		#do
-		#    echo $result
-		#done
-
-
-		#select yn in "Y" "N" "y" "n" "\n"; do
-		#    case $yn in
-		#   	y ) echo "";;
-	#        N ) exit;;
-	#    esac
-	#done
 
 	# ersten Treffer in Zwischenablage kopieren
 	#if [ $line == $first_hit ] ; then
