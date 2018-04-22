@@ -70,7 +70,6 @@ function usage
 	[[ $# -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
 }
 
-
 # f(0) = c or parent in (c)
 # f(1) = or parent in ( l in (f(0)))
 # f(n) = or parent in ( l in (f(n-1)))
@@ -126,7 +125,7 @@ while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 			#		search_pattern=$OPTARG #TODO eigenes Feld damit Kombination mit s funktioniert
 			parameters="$parameters""d" #for history
 			;;
-		s)        #TODO bei umstieg auf PSQL umgehen das like kontextsensitiv sucht
+		s)        #if you want to use PSQL take care of context sensitiveness
 			file_search="and ((files.name like '%""$OPTARG""%') or (files.id like '%""$OPTARG""%'))" 
 			info_search="and ((infos.name like '%""$OPTARG""%') or (infos.text like '%""$OPTARG""%') or (infos.id like '%""$OPTARG""%'))"
 			link_search="and ((links.name like '%""$OPTARG""%') or (links.source like '%""$OPTARG""%') or (links.id like '%""$OPTARG""%'))"
@@ -225,7 +224,6 @@ while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 done
 
 
-
 j=0
 # Verbrauchte Argumente überspringen
 shift $(( OPTIND - 1 ))
@@ -250,7 +248,6 @@ else
 		#needed for history
 		categories="$categories,$one_category"
 		category_id=`sqlite3 "$database" "select id from category where (lower(category.name)=lower($one_category) or category.id in (select distinct category_id from category_alias where lower(name)=lower($one_category)));"`
-		#category_id="select id from category where (lower(category.name)=lower($one_category) or category.id in (select distinct category_id from category_alias where lower(name)=lower($one_category)))"
 
 		category_next_layer="select id from category where parent"
 
@@ -332,7 +329,6 @@ do
 			else
 				categories_clause="v_files as files"
 			fi
-
 
 		#20111009 Es werden keine backups mehr gesucht
 		 dbquery="select files.id, files.inode, files.name, files.disksource, count(*) as category_match, files.rating from $categories_clause where 1=1 $file_search $ex_category_clause $search_date $WHERE_PART and (files.binode=0 or files.binode is null) and files.zone in (select zone from zones where zones.zones=$zones)
