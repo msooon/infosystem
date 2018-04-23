@@ -113,6 +113,7 @@ INSERT INTO "zones" VALUES(78,15,11);
 INSERT INTO "zones" VALUES(79,15,13);
 INSERT INTO "zones" VALUES(80,15,14);
 INSERT INTO "zones" VALUES(81,15,15);
+INSERT INTO "zones" VALUES(82,2,8);
 
 CREATE TABLE cronjobs(id integer PRIMARY KEY,name text, lastModified datetime);
 INSERT INTO "cronjobs" VALUES(1,'daily',(select date()));
