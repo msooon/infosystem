@@ -35,7 +35,7 @@ else
 fi
 
 
-msearch_opt_args="-pkr40"  #example "-v"
+msearch_opt_args="-pkjr40"  #example "-v"
 add_category_dirs
 echo msearch_opt_args=$msearch_opt_args
 

@@ -25,7 +25,7 @@ else
 	source ${0%/*}/config
 fi
 echo ""
-msearch_opt_args="-pkr40"  #example "-v"
+msearch_opt_args="-pkjr40"  #example "-v"
 
 #sqlite3 $database "select id,name,zone,dateAdded,expiration from infos where date(lastModified)>\"`date -d \"5 days\" +%Y-%m-%d`\"\";"
 #diff -q /media/daten/bin/infosystem /mnt/ftp/infosystem/infosystem
@@ -36,6 +36,26 @@ if [ -e leave_mobile_mode.sql ] ; then
 	sqlite3 $database < leave_mobile_mode.sql 2> /dev/null
 fi
 
+cp $database $backup/infosystem_`date +%d`.db
+
+today=`date +%d`
+if [[ $today = 01 ]] ; then
+	./set_zone.sh 7
+  date +%Y-%m-%d >> $cached_files/stats
+	echo "Infos gesamt" >> $cached_files/stats
+	#	msearch -kpic >> $cached_files/stats
+	sqlite3 $database "select count(*) from infos;" >> $cached_files/stats
+	echo "Links gesamt" >> $cached_files/stats
+	msearch -kplc >> $cached_files/stats
+	echo "Infos want-todo" >> $cached_files/stats
+	msearch -kpic want-todo >>  $cached_files/stats
+	echo "Links want-todo" >> $cached_files/stats
+	msearch -kplc want-todo >> $cached_files/stats
+	echo "" >> $cached_files/stats
+	./set_zone.sh $zones
+fi
+
+today=`date +%w`
 if [[ $use_add_db = y ]] ; then
 	cd $infosystem/add_dbs
 	#first check internet connection
@@ -49,28 +69,15 @@ if [[ $use_add_db = y ]] ; then
 			scp `cat ../add_db_scp` .
 		fi
 	fi
-	ls -1 > $cached_files/add_dbs
+	ls -1 > $infosystem/cache/add_db_names
 	cd -
 	echo ""
 fi
 
+#delete past events
+if [ -e  $infosystem/add_dbs/owncloud.db ] ; then
+	sqlite3 -header $infosystem/add_dbs/owncloud.db "delete from oc_clndr_objects where calendarid>6 and (enddate < date('now') or startdate < date('now')) ;"
 
-cp $database $backup/infosystem_`date +%d`.db
-
-today=`date +%d`
-if [[ $today = 01 ]] ; then
-	./set_zone.sh 7
-  date +%Y-%m-%d >> $cached_files/stats
-	echo "Infos gesamt" >> $cached_files/stats
-	msearch -kpic >> $cached_files/stats
-	echo "Links gesamt" >> $cached_files/stats
-	msearch -kplc >> $cached_files/stats
-	echo "Infos want-todo" >> $cached_files/stats
-	msearch -kpic want-todo >>  $cached_files/stats
-	echo "Links want-todo" >> $cached_files/stats
-	msearch -kplc want-todo >> $cached_files/stats
-	echo "" >> $cached_files/stats
-	./set_zone.sh $zones
 fi
 
 add_category_dirs
@@ -173,6 +180,14 @@ echo ""
 msearch $msearch_opt_args -i  -d"='`date +%Y-%m-%d`'" -x done  #-w "Date(expiration) is null"
 #msearch $msearch_opt_args -i -d"<='`date +%Y-%m-%d`'" -w "Date(expiration)>='`date +%Y-%m-%d`'" -x "weekly','biweekly','monthly"
 msearch $msearch_opt_args -i  -w "Date(date)<='`date +%Y-%m-%d`' and Date(expiration)>='`date +%Y-%m-%d`'" -x "done','weekly','biweekly','monthly"
+#Because of Problem with quotes in add_dbs
+if [[ $use_add_db = y ]] ; then
+	while read line
+	do
+		msearch -z $infosystem/add_dbs/$line  $msearch_opt_args -i -w "Date(date)<='`date +%Y-%m-%d`' and Date(expiration)>='`date +%Y-%m-%d`'" -x "done','weekly','biweekly','monthly"
+	done < $infosystem/cache/add_db_names 
+
+fi
 
 echo "---------------------------------------------------------------------------"
 echo ""
@@ -202,7 +217,7 @@ echo ""
 
 echo "---------------------------------------------------------------------------"
 echo ""
-echo -e "\E[35m TODO's: "; tput sgr0
+echo -e "\E[33m TODO's: "; tput sgr0
 echo "---------------------------------------------------------------------------"
 echo ""
 msearch $msearch_opt_args todo
@@ -250,6 +265,14 @@ if [ -e ~/.tvbrowser ] ; then
 	fi
 fi
 
+echo ""
+
+# Euro Dollar exchange
+#wget -qO- "http://www.google.com/finance/converter?a=1&from=eur&to=usd" |  sed '/res/!d;s/<[^>]*>//g' | tee -a $cached_files/eur_dol_exchange
+wget -qO- "http://www.google.com/finance/converter?a=1&from=eur&to=usd" |  sed '/res/!d;s/<[^>]*>//g' >> $cached_files/eur_dol_exchange
+wget -qO- "https://www.google.com/finance/converter?a=1&from=eur&to=gbp" |  sed '/res/!d;s/<[^>]*>//g' >> $cached_files/eur_gbp_exchange
+sed -i '/^ *$/d' $cached_files/eur_dol_exchange; sed -i '/^ *$/d' $cached_files/eur_gbp_exchange;
+tail -n5 $cached_files/eur_*_exchange
 echo ""
 
 #echo -e "\E[93m Termine in einer Woche: "; tput sgr0

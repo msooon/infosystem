@@ -18,6 +18,8 @@ ramdisk=/tmp
 #open_browser
 open_filemanager=0
 cached_files=$base_path/infosystem/cache/
+hits_before_asking=4 #Ask for proceeding if there are more than defined hits
 auto_update=0 #auto update (in view changed) files and infos in database alpha
 email_and_files="$base_path/Profile/Thunderbird/$USER/INBOX ~/.psql_history ~/.bash_history "
 import_exclude="weekly meeting"
+useragent='Mozilla/5.0 (X11; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'

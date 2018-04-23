@@ -36,7 +36,6 @@ offset=""
 item_type_to_search=0 #default: infos, links und files werden gesucht - vorsicht id für files hier 4!
 parameters="" #for history
 sort_order="category_match desc, rating desc, date desc" #Standard: Bestbewerteste und neueste zuerst
-hits_before_asking=4 #Ask for proceeding if there are more than defined hits
 search_date=""
 USE_HISTORY=y
 Q_MODE=n
@@ -48,6 +47,7 @@ EXCERPT=n
 INDEMNIFY="" #indemnify some categories
 INDEMNIFY_COUNT=0
 ADDITIONAL_DB=""
+DONT_ASK=n
 
 # Funktionen
 function usage 
@@ -102,7 +102,7 @@ for i in "$@"; do
 done
 
 #Parse paremeter
-while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
+while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamojpcvuqkh' OPTION ; do
 	case $OPTION in
 		a) #reseverd for audio output
 			 echo using some software to read information texts
@@ -195,7 +195,8 @@ while getopts 'bs:d:o:n:x:r:t:w:y:z:eiflgamopcvuqkh' OPTION ; do
 			parameters="$parameters""k" #for history
 			;;
 		
-#		j)
+		j) DONT_ASK=y
+			;;
 		n)	min_catagorys="*0+$OPTARG"
 			#min_catagorys="$OPTARG"
 			parameters="$parameters""c$min_catagorys" #for history
@@ -335,21 +336,22 @@ do
 		group by files.id having category_match>=$# $min_catagorys order by rating desc $show_only $offset" #TODO evtl date hinzufügen und $sort_order verwenden
 		
 		hits=`sqlite3 $database "select count(*) from ($dbquery) ;"`
-	
 		if [[ $count_hits == 1 ]] ; then
 			echo $hits
 			exit $EXIT_SUCCESS
 		fi
+		
+		if [[ $DONT_ASK = n ]] ; then
+			if [ $hits -gt $hits_before_asking ] ; then
 
-		if [ $hits -gt $hits_before_asking ] ; then
+				read -s -n 1 -p "There are $hits files to show: proceed (Y/n)? " choice
+				echo ""
 
-			read -s -n 1 -p "There are $hits files to show: proceed (Y/n)? " choice
-			echo ""
-
-			case "$choice" in
-				n|N)	exit $EXIT_SUCCESS	;;
-				Y|y|"")	true	;;
-			esac
+				case "$choice" in
+					n|N)	exit $EXIT_SUCCESS	;;
+					Y|y|"")	true	;;
+				esac
+			fi
 		fi
 
 		if [[ $ex_category != "''" ]] ; then
@@ -495,15 +497,17 @@ do
 			echo "$dbquery ;"
 		fi
 
-		if [ $hits -gt $hits_before_asking ] ; then
+		if [[ $DONT_ASK = n ]] ; then
+			if [ $hits -gt $hits_before_asking ] ; then
 
-			read -s -n 1 -p "There are $hits links to show: proceed (Y/n)? " choice
-			echo ""
+				read -s -n 1 -p "There are $hits links to show: proceed (Y/n)? " choice
+				echo ""
 
-			case "$choice" in
-				n|N)	exit $EXIT_SUCCESS	;;
-				Y|y|"")	true	;;
-			esac
+				case "$choice" in
+					n|N)	exit $EXIT_SUCCESS	;;
+					Y|y|"")	true	;;
+				esac
+			fi
 		fi
 
 		sqlite3 $database "$dbquery ;" > $ramdisk/temp_links
@@ -603,22 +607,24 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 		#2012-11-17 count hits everytime like other unix commands do :-)
 
 		hits=`sqlite3 $database "select count(*) from ($dbquery) ;"`
-
+	   
 		if [[ $count_hits == 1 ]] ; then
 			echo $hits
 			exit $EXIT_SUCCESS
 		fi
 
-		if [ $hits -gt $hits_before_asking ] ; then
+    if [[ $DONT_ASK = n ]] ; then
+      if [ $hits -gt $hits_before_asking ] ; then
 
-			read -s -n 1 -p "There are $hits infos to show: proceed (Y/n)? " choice
-			echo ""
+        read -s -n 1 -p "There are $hits infos to show: proceed (Y/n)? " choice
+        echo ""
 
-			case "$choice" in
-				n|N)	exit $EXIT_SUCCESS	;;
-				Y|y|"")	true	;;
-			esac
-		fi
+        case "$choice" in
+          n|N)  exit $EXIT_SUCCESS  ;;
+          Y|y|"") true  ;;
+        esac
+      fi
+    fi
 
 		if [[ $VERBOSE = y ]] ; then
 		  echo hits_before_asking: $hits_before_asking
@@ -714,9 +720,17 @@ if [[ $use_email == 1 ]] ; then
 	echo "---------------------------------------"
 	echo ""
 	if [[ $VERBOSE = y ]] ; then
-		echo "cat $email_and_files | grep $grep_only -i -C3" "$search_pattern" 
+		#echo "cat $email_and_files | grep $grep_only -i -C3" "$search_pattern" 
+		echo email_and_files $email_and_files 
+
 	fi
-	cat $email_and_files | grep $grep_only -i -C3 "$search_pattern"  # grep without cat and context has the problem that filename is in each line
+#	cat $email_and_files | grep $grep_only -i -C3 "$search_pattern"  # grep without cat and context has the problem that filename is in each line
+	 for i in $email_and_files; 
+	 	do
+#	 		echo -e "\E[33m `grep -Rl $grep_only -i -C3 \"$search_pattern\" $i`"; tput sgr0
+	 		grep -Rl $grep_only -i -C3 "$search_pattern" $i ; 
+	 		grep $grep_only -i -C3 "$search_pattern" $i
+	 	done
 fi
 
 #TODO parameters should be in config file
