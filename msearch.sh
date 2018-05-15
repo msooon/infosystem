@@ -689,12 +689,12 @@ dbquery="select infos.name, infos.id, count(*) as category_match, infos.rating, 
 					echo -e "\E[94m`sqlite3 $database \"select source from links, item_ref where ((item1_id=$id and item1_type_id=1 and item2_type_id=2 and item2_id=links.id) OR (item2_id=$id and item2_type_id=1 and item1_type_id=2 and item1_id=links.id)) AND zone in (select zone from zones where zones.zones=$zones);\"`"; tput sgr0  #url wird blau ausgegeben
 				#connected infos
 			#	echo ""
-				echo "`sqlite3 $database \"select name from infos, item_ref where item1_id=$id and item1_type_id=1 and item2_type_id=1 and item2_id=infos.id AND zone in (select zone from zones where zones.zones=$zones);\"`"  #TODO auslagern
+				echo -e "\E[97m`sqlite3 $database \"select name from infos, item_ref where item1_id=$id and item1_type_id=1 and item2_type_id=1 and item2_id=infos.id AND zone in (select zone from zones where zones.zones=$zones);\"`"; tput sgr0   #TODO auslagern
 				elif [[ $SHOW_REFS = y ]] ; then
 					# 2014-09-04 msoon: one category layer will used here
 					# maybe sqlite3 -list to show infos.text below
 			#		echo ""
-					echo "`sqlite3 $database \"select name from infos, item_ref where item1_id=$id and item1_type_id=1 and item2_type_id=1 and item2_id=infos.id and item2_id in (select item_id from category_info where category_id in (select category_id from category_info where item_id=$id ) OR category_id in (select id from category where parent in (select category_id from category_info where item_id=$id) ) ) AND zone in (select zone from zones where zones.zones=$zones);\"`"
+					echo -e "\E[97m`sqlite3 $database \"select name from infos, item_ref where item1_id=$id and item1_type_id=1 and item2_type_id=1 and item2_id=infos.id and item2_id in (select item_id from category_info where category_id in (select category_id from category_info where item_id=$id ) OR category_id in (select id from category where parent in (select category_id from category_info where item_id=$id) ) ) AND zone in (select zone from zones where zones.zones=$zones);\"`"; tput sgr0
 
 
 				fi
