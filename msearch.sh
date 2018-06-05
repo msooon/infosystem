@@ -728,8 +728,24 @@ if [[ $use_email == 1 ]] ; then
 	 for i in $email_and_files; 
 	 	do
 #	 		echo -e "\E[33m `grep -Rl $grep_only -i -C3 \"$search_pattern\" $i`"; tput sgr0
+
+		if [[ $DONT_ASK = n ]] ; then
+			hits=`grep -c -R $grep_only -i "$search_pattern" $i`
+			if [ $hits -gt $hits_before_asking ] ; then
+
+				read -s -n 1 -p "There are $hits hits in $i: proceed (Y/n)? " choice
+				echo ""
+
+				case "$choice" in
+					n|N) true		;;
+					Y|y|"")	
+						;;
+				esac
+			fi
 	 		grep -Rl $grep_only -i -C3 "$search_pattern" $i ; 
 	 		grep $grep_only -i -C3 "$search_pattern" $i
+		fi
+
 	 	done
 fi
 
