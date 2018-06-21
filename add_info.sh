@@ -35,6 +35,8 @@ sqlite3 $database "delete from infos where id=$next_id; "
 
 sqlite3 $database "insert into infos (id,name,text,zone,dateAdded,date,lastModified) values ($next_id,'$1',`cat temp_info`,$zones,(select datetime()),(select datetime()),(select datetime()));" && echo "info gespeichert"
 
+	cp  temp_info "$cached_files/prev_versions/$1`date +%Y%m%d%H%M%S`"
+
 echo ""
 echo "inserted id: $next_id"
 
