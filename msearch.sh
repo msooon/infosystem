@@ -739,11 +739,11 @@ if [[ $use_email == 1 ]] ; then
 				case "$choice" in
 					n|N) true		;;
 					Y|y|"")	
+	 		grep -Rl $grep_only -i -C3 "$search_pattern" $i ; 
+	 		grep $grep_only -i -C3 "$search_pattern" $i
 						;;
 				esac
 			fi
-	 		grep -Rl $grep_only -i -C3 "$search_pattern" $i ; 
-	 		grep $grep_only -i -C3 "$search_pattern" $i
 		fi
 
 	 	done
