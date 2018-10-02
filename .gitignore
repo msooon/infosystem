@@ -5,3 +5,5 @@ autoinit_own.sh
 add_dbs/
 cache/
 add_db
+experimental/
+test
