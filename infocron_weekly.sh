@@ -57,12 +57,12 @@ sqlite3 $database "delete from category_item where item_type_id=1 and category_i
 
 # biweekly and monthly
 
-sqlite3 $database "update infos set date=DateTime(date,'+14 days') where id in (select item_id from category_item where item_type_id=1 and category_id=6) and DateTime()>DateTime(date);"
+sqlite3 $database "update infos set date=DateTime(date,'+14 days') where id in (select item_id from category_item where item_type_id=1 and category_id=6) and DateTime()>DateTime(date) and (DateTime()>DateTime(expiration) or expiration is null);"
 
-sqlite3 $database "update infos set date=DateTime(date,'+1 month') where id in (select item_id from category_item where item_type_id=1 and category_id=4) and DateTime()>DateTime(date);"
+sqlite3 $database "update infos set date=DateTime(date,'+1 month') where id in (select item_id from category_item where item_type_id=1 and category_id=4) and DateTime()>DateTime(date) and (DateTime()>DateTime(expiration) or expiration is null);"
 
 # yearly (monthly cronjob would be enough)
-sqlite3 $database "update infos set date=DateTime(date,'+1 year') where id in (select item_id from category_item where item_type_id=1 and category_id=9) and DateTime()>DateTime(date);"
+sqlite3 $database "update infos set date=DateTime(date,'+1 year') where id in (select item_id from category_item where item_type_id=1 and category_id=9) and DateTime()>DateTime(date) and (DateTime()>DateTime(expiration) or expiration is null);"
 
 	 # delete old cached files
 find $cached_files/*/ -maxdepth 2 -mtime +28 -name old -exec rm -rv -- "{}" \;
