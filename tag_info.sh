@@ -25,6 +25,16 @@ else
 
 category_name="'`basename $element`'"
 
+#TODO clean solution
+## if [[ "$WORD" =~ ^(a|b|c)$ ]]; then  
+## if [[ "$category_name" =~ ^(`echo $ramdisk/category | sed "s/ /|/g"`)$ ]]; then
+
+# Problem if you try to extract categories from infoname
+#if [[ `echo $ramdisk/category/*` != "* $category_name *" ]]
+#	then
+#add_category $element;
+#fi
+
 # 2013-04-02 msoon: only using item_id and prevent adding parent categorys
 
 dbquery="select id from category where (lower(name)=lower($category_name) OR id in (select category.id from category, category_alias where category.id=category_alias.category_id and lower(category_alias.name)=lower($category_name))) and 
