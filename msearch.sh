@@ -550,6 +550,7 @@ do
 
 			sqlite3 $database "select distinct category.name from links, category, category_link where links.id=$id and category_link.item_id=links.id and category_link.category_id=category.id and category.zone in (select zone from zones where zones.zones=$zones) order by category.name;" | xargs echo "Kategorien: "
 			echo ""
+			#for f in `seq $COLUMNS`; do echo -n - ; done
 			echo "----------------------------------------------------"
 			echo ""
 
@@ -759,13 +760,13 @@ if [[ $use_IMDB == 1 ]] ; then
 	#alternativ
 	
 	CURL_PATTERN=`echo "$search_pattern" | sed 's/ /+/g'` #also possible to replace space with + for curl
-	IMDB_SEARCH=`curl -sS "http://www.imdb.com/find?q=$CURL_PATTERN" | grep -o -m1 "/title/tt.\{3,25\}=fn_al_tt_1" | head -n1`
+	IMDB_SEARCH=`curl --user-agent "$useragent" -sS "https://www.imdb.com/find?q=$CURL_PATTERN" | grep -o -m1 "/title/tt.\{3,25\}=fn_al_tt_1" | head -n1`
 	
 	if [[ $VERBOSE = y ]] ; then
-		echo search_pattern: http://www.imdb.com/find?q=$search_pattern 
-		echo IMDB_SEARCH http://www.imdb.com#$IMDB_SEARCH
+		echo search_pattern: "https://www.imdb.com/find?q=$search_pattern" 
+		echo IMDB_SEARCH "https://www.imdb.com#$IMDB_SEARCH"
 	fi
-	curl -s http://www.imdb.com$IMDB_SEARCH > $ramdisk/IMDB_MOVIE #TODO evtl auslagern
+	curl --user-agent "$useragent" -s https://www.imdb.com$IMDB_SEARCH > $ramdisk/IMDB_MOVIE #TODO evtl auslagern
 	grep -o '<title>.\{4,50\} - IMDb</title>' $ramdisk/IMDB_MOVIE | sed 's/<title>/Title: /g' | sed 's|</title>||g'
 	grep "<meta name=\"description\"" $ramdisk/IMDB_MOVIE | sed 's/<meta name="description" content="//g' | sed 's|" />||g'
 	grep -o '"ratingValue">.\{3\}' $ramdisk/IMDB_MOVIE | sed 's/"ratingValue">/Rating: /g'
