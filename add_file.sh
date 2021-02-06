@@ -16,7 +16,7 @@ source ${0%/*}/config
 inode=`find "$1" -maxdepth 0 -type f -printf '%i\n'`
 
 #um discsource automatisch zu bestimmen
-disksource=`echo $1 | awk -F'/' '//{printf "/%s/%s/.diskinfo",$2,$3}' | xargs head -n1`
+disksource=`echo "$1" | awk -F'/' '//{printf "/%s/%s/.diskinfo",$2,$3}' | xargs head -n1`
 
 mediatype=`file -F',' --mime-type "$1" | grep -v application/x-directory | cut -f2 -d','`
 mediatype_trim=`sqlite3 $database "select trim('$mediatype')"`
@@ -37,7 +37,7 @@ echo "inserted id: $next_id"
 categorys=""
 num_categorys=0
 
-categorys="${*:2} `echo $1 | sed 's;/; ;g'`"
+categorys="${*:2} `echo "$1" | sed 's;/; ;g'`"
 
 if [[ $VERBOSE = y ]] ; then
 	echo -e "\E[35mcategorys: $categorys"; tput sgr0
