@@ -37,7 +37,7 @@ echo "inserted id: $next_id"
 categorys=""
 num_categorys=0
 
-categorys="${*:2}"
+categorys="${*:2} `echo $1 | sed 's;/; ;g'`"
 
 if [[ $VERBOSE = y ]] ; then
 	echo -e "\E[35mcategorys: $categorys"; tput sgr0
